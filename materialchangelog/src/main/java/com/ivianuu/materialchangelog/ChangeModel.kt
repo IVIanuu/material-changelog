@@ -93,7 +93,7 @@ inline fun ReleaseModel.Builder.change(changeTextRes: Int) {
 inline fun ReleaseModel.Builder.new(text: CharSequence) {
     change(
         android.text.SpannableStringBuilder()
-            .bold { color(Color.BLACK) { append("New: ") } }
+            .bold { color(Color.BLACK) { append("NEW: ") } }
             .append(text)
     )
 }
@@ -101,7 +101,7 @@ inline fun ReleaseModel.Builder.new(text: CharSequence) {
 inline fun ReleaseModel.Builder.fix(text: CharSequence) {
     change(
         android.text.SpannableStringBuilder()
-            .bold { color(Color.BLACK) { append("Fix: ") } }
+            .bold { color(Color.BLACK) { append("FIX: ") } }
             .append(text)
     )
 }

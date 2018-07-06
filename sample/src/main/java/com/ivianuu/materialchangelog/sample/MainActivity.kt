@@ -2,9 +2,9 @@ package com.ivianuu.materialchangelog.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
 import com.airbnb.epoxy.EpoxyController
-import com.airbnb.epoxy.EpoxyRecyclerView
-import com.ivianuu.materialchangelog.change
 import com.ivianuu.materialchangelog.fix
 import com.ivianuu.materialchangelog.new
 import com.ivianuu.materialchangelog.release
@@ -16,20 +16,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        list.buildModelsWith2 {
-            release("Version: 1.0.1") {
-                change("Added Something")
-                fix("Fixed a bug")
+        show.setOnClickListener {
+            val controller = epoxyController {
+                (0 until 20)
+                    .reversed()
+                    .forEach {
+                        release("Version: 1.0.$it") {
+                            new("Added Something")
+                            new("Added Something different")
+                            fix("Fixed a bug")
+                        }
+                    }
             }
 
-            release("Version: 1.0.0") {
-                new("Added something")
-                fix("Fixed a bug")
-            }
+            MaterialDialog.Builder(this)
+                .title("Changelog")
+                .positiveText("OK")
+                .adapter(controller.adapter, LinearLayoutManager(this))
+                .show()
         }
     }
 
-    fun EpoxyRecyclerView.buildModelsWith2(init: EpoxyController.() -> Unit) {
-        buildModelsWith(init)
-    }
+    private inline fun epoxyController(crossinline buildModels: EpoxyController.() -> Unit) =
+        object : EpoxyController() {
+            override fun buildModels() {
+                buildModels.invoke(this)
+            }
+        }.apply { requestModelBuild() }
 }

@@ -17,6 +17,7 @@ object Versions {
     const val kotlin = "1.2.51"
 
     const val mavenGradle = "2.1"
+    const val materialDialogs = "0.9.6.0"
 
     const val support = "28.0.0-alpha3"
 }
@@ -32,6 +33,8 @@ object Deps {
     const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib-jre7:${Versions.kotlin}"
 
     const val mavenGradlePlugin = "com.github.dcendents:android-maven-gradle-plugin:${Versions.mavenGradle}"
+
+    const val materialDialogs = "com.afollestad.material-dialogs:core:${Versions.materialDialogs}"
 
     const val supportAppCompat = "com.android.support:appcompat-v7:${Versions.support}"
 }

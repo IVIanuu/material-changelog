@@ -40,4 +40,5 @@ android {
 dependencies {
     implementation Deps.supportAppCompat
     implementation project(':materialchangelog')
+    implementation Deps.materialDialogs
 }
