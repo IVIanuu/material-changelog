@@ -1,6 +1,7 @@
 package com.ivianuu.materialchangelog
 
 import com.airbnb.epoxy.EpoxyController
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import kotlinx.android.synthetic.main.item_changelog_release.*
 import java.util.*
@@ -10,7 +11,8 @@ import java.util.*
  */
 data class ReleaseModel(
     val headerText: CharSequence? = null,
-    val headerTextRes: Int = 0
+    val headerTextRes: Int = 0,
+    val models: List<EpoxyModel<*>>
 ) : EpoxyModelWithHolder<ChangelogEpoxyHolder>() {
 
     init {
@@ -36,10 +38,11 @@ data class ReleaseModel(
 
     override fun createNewHolder() = ChangelogEpoxyHolder()
 
-    class Builder {
+    class Builder(private val epoxyController: EpoxyController) {
 
         private var headerText: CharSequence? = null
         private var headerTextRes = 0
+        var models = mutableListOf<EpoxyModel<*>>()
 
         fun headerText(headerText: CharSequence?) {
             this.headerText = headerText
@@ -49,28 +52,41 @@ data class ReleaseModel(
             this.headerTextRes = headerTextRes
         }
 
-        fun build() = ReleaseModel(headerText, headerTextRes)
+        fun addModels(vararg models: EpoxyModel<*>) {
+            this.models.addAll(models)
+        }
+
+        fun addModels(models: Collection<EpoxyModel<*>>) {
+            this.models.addAll(models)
+        }
+
+        fun build(): ReleaseModel {
+            return ReleaseModel(headerText, headerTextRes, models)
+        }
+
+        fun buildAndAdd(): ReleaseModel {
+            val model = build()
+            model.addTo(epoxyController)
+            models.forEach { it.addTo(epoxyController) }
+            return model
+        }
     }
 
 }
 
-inline fun EpoxyController.release(init: ReleaseModel.Builder.() -> Unit) {
-    ReleaseModel.Builder()
-        .apply(init)
-        .build()
-        .also { it.addTo(this) }
-}
-
-inline fun EpoxyController.release(headerText: CharSequence) {
-    ReleaseModel.Builder()
+inline fun EpoxyController.release(
+    headerText: CharSequence,
+    init: ReleaseModel.Builder.() -> Unit
+) {
+    ReleaseModel.Builder(this)
         .apply { headerText(headerText) }
-        .build()
-        .also { it.addTo(this) }
+        .apply(init)
+        .buildAndAdd()
 }
 
-inline fun EpoxyController.release(headerTextRes: Int) {
-    ReleaseModel.Builder()
+inline fun EpoxyController.release(headerTextRes: Int, init: ReleaseModel.Builder.() -> Unit) {
+    ReleaseModel.Builder(this)
         .apply { headerTextRes(headerTextRes) }
-        .build()
-        .also { it.addTo(this) }
+        .apply(init)
+        .buildAndAdd()
 }

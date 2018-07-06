@@ -17,7 +17,6 @@
 package com.ivianuu.materialchangelog
 
 import android.graphics.Color
-import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import kotlinx.android.synthetic.main.item_changelog_change.*
 import java.util.*
@@ -70,28 +69,28 @@ data class ChangeModel(
     }
 }
 
-inline fun EpoxyController.change(init: ChangeModel.Builder.() -> Unit) {
+inline fun ReleaseModel.Builder.change(init: ChangeModel.Builder.() -> Unit) {
     ChangeModel.Builder()
         .apply(init)
         .build()
-        .also { it.addTo(this) }
+        .also { addModels(it) }
 }
 
-inline fun EpoxyController.change(changeText: CharSequence) {
+inline fun ReleaseModel.Builder.change(changeText: CharSequence) {
     ChangeModel.Builder()
         .apply { changeText(changeText) }
         .build()
-        .also { it.addTo(this) }
+        .also { addModels(it) }
 }
 
-inline fun EpoxyController.change(changeTextRes: Int) {
+inline fun ReleaseModel.Builder.change(changeTextRes: Int) {
     ChangeModel.Builder()
         .apply { changeTextRes(changeTextRes) }
         .build()
-        .also { it.addTo(this) }
+        .also { addModels(it) }
 }
 
-inline fun EpoxyController.new(text: CharSequence) {
+inline fun ReleaseModel.Builder.new(text: CharSequence) {
     change(
         android.text.SpannableStringBuilder()
             .bold { color(Color.BLACK) { append("New: ") } }
@@ -99,7 +98,7 @@ inline fun EpoxyController.new(text: CharSequence) {
     )
 }
 
-inline fun EpoxyController.fix(text: CharSequence) {
+inline fun ReleaseModel.Builder.fix(text: CharSequence) {
     change(
         android.text.SpannableStringBuilder()
             .bold { color(Color.BLACK) { append("Fix: ") } }
